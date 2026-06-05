@@ -20,6 +20,8 @@ def connect():
             st.secrets["gcp_service_account"]
         )
 
-    return gc.open_by_key(
+    spreadsheet = gc.open_by_key(
         SPREADSHEET_ID
     )
+
+    return spreadsheet
