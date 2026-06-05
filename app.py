@@ -83,7 +83,7 @@ if st.button("Login con Google"):
     data = supabase.auth.sign_in_with_oauth({
         "provider": "google",
         "options": {
-            "redirect_to": "http://localhost:8501"
+            "redirect_to": "https://polla-mundialista-eicg-svl.streamlit.app/"
         }
     })
 
