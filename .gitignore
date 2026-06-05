@@ -1,0 +1,26 @@
+# Entorno virtual
+venv/
+
+# Python
+__pycache__/
+*.pyc
+
+# Credenciales
+credentials/
+
+# Streamlit
+.streamlit/secrets.toml
+
+# Temporales
+tmp*
+database/tmp*
+services/tmp*
+
+# Archivos generados
+jugadores.csv
+
+# Windows
+Thumbs.db
+
+# Mac
+.DS_Store
