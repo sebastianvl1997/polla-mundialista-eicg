@@ -1,27 +1,17 @@
 from database.sheets import connect
 from services.fixture_service import get_all_matches
 from services.results_service import actualizar_resultado
+import pandas as pd
 
 
 def sincronizar_resultados():
 
     spreadsheet = connect()
 
-    usuarios_sheet = spreadsheet.worksheet(
-        "Usuarios"
-    )
-
-    pronosticos_sheet = spreadsheet.worksheet(
-        "Pronosticos"
-    )
-
-    resultados_sheet = spreadsheet.worksheet(
-        "Resultados"
-    )
-
-    ranking_sheet = spreadsheet.worksheet(
-        "Ranking"
-    )
+    usuarios_sheet = spreadsheet.worksheet("Usuarios")
+    pronosticos_sheet = spreadsheet.worksheet("Pronosticos")
+    resultados_sheet = spreadsheet.worksheet("Resultados")
+    ranking_sheet = spreadsheet.worksheet("Ranking")
 
     df = get_all_matches()
 
@@ -30,7 +20,7 @@ def sincronizar_resultados():
         hg = row.get("HomeGoals")
         ag = row.get("AwayGoals")
 
-        if hg == "" or ag == "":
+        if pd.isna(hg) or pd.isna(ag):
             continue
 
         actualizar_resultado(
