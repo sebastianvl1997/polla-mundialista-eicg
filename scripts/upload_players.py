@@ -1,42 +1,98 @@
-import sys
-from pathlib import Path
-
-sys.path.append(
-    str(Path(__file__).resolve().parents[1])
-)
-
+import re
+import pdfplumber
 import pandas as pd
 
-from database.sheets import connect
+PDF_FILE = r"data/SquadLists-English.pdf"
 
-spreadsheet = connect()
+players = []
 
-sheet = spreadsheet.worksheet("Jugadores")
+# Traducción de posiciones
+posiciones = {
+    "GK": "Arquero",
+    "DF": "Defensa",
+    "MF": "Mediocampista",
+    "FW": "Delantero"
+}
 
-df = pd.read_csv(
+with pdfplumber.open(PDF_FILE) as pdf:
+
+    current_team = None
+
+    for page in pdf.pages:
+
+        text = page.extract_text()
+
+        if not text:
+            continue
+
+        lines = text.split("\n")
+
+        for line in lines:
+
+            # Selección
+            team_match = re.match(
+                r"^(.*?) \(([A-Z]{3})\)$",
+                line
+            )
+
+            if team_match:
+                current_team = team_match.group(1).strip()
+                continue
+
+            if current_team is None:
+                continue
+
+            # Jugadores
+            m = re.match(
+                r"^\d+\s+(GK|DF|MF|FW)\s+([A-ZÀ-ÖØ-Ý' -]+)\s+(.+?)\s+\d{2}/\d{2}/\d{4}",
+                line
+            )
+
+            if m:
+
+                codigo_posicion = m.group(1)
+                apellido = m.group(2).title().strip()
+                resto = m.group(3).strip()
+
+                nombre = resto.split()[0]
+
+                jugador = f"{nombre} {apellido}"
+
+                # Eliminar duplicación inicial
+                jugador_parts = jugador.split()
+
+                if (
+                    len(jugador_parts) >= 2
+                    and jugador_parts[0].lower()
+                    == jugador_parts[1].lower()
+                ):
+                    jugador = " ".join(jugador_parts[1:])
+
+                players.append(
+                    [
+                        current_team,
+                        jugador,
+                        posiciones[codigo_posicion]
+                    ]
+                )
+
+df = pd.DataFrame(
+    players,
+    columns=[
+        "equipo",
+        "jugador",
+        "posicion"
+    ]
+)
+
+print(df.head(30))
+print()
+print("TOTAL:", len(df))
+
+df.to_csv(
     "jugadores.csv",
+    index=False,
     encoding="utf-8-sig"
 )
 
-sheet.clear()
-
-sheet.append_row([
-    "equipo",
-    "jugador"
-])
-
-rows = df.values.tolist()
-
-BATCH_SIZE = 500
-
-for i in range(0, len(rows), BATCH_SIZE):
-
-    batch = rows[i:i + BATCH_SIZE]
-
-    sheet.append_rows(batch)
-
-    print(
-        f"Cargadas {min(i + BATCH_SIZE, len(rows))} filas"
-    )
-
-print("Finalizado")
+print("CSV generado: jugadores.csv")

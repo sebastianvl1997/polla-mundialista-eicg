@@ -230,10 +230,10 @@ for _, row in df.iterrows():
     ]
     
     lista_jugadores = sorted(
-        jugadores_partido["jugador"]
-        .dropna()
-        .unique()
-        .tolist()
+        (
+            f"{row['jugador']} ({row['equipo']} - {row['posicion']})"
+            for _, row in jugadores_partido.iterrows()
+        )
     )
     
     opciones_goleador = [""] + lista_jugadores
