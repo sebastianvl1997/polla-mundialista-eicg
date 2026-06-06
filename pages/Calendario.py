@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 from database.sheets import connect
+from datetime import datetime
 from database.pronosticos import (
     save_prediction,
     get_prediction
@@ -32,9 +33,11 @@ jugadores_sheet = spreadsheet.worksheet(
     "Jugadores"
 )
 
-jugadores_df = pd.DataFrame(
-    jugadores_sheet.get_all_records()
-)
+@st.cache_data(ttl=300)
+def load_jugadores(_sheet):
+    return pd.DataFrame(_sheet.get_all_records())
+
+jugadores_df = load_jugadores(jugadores_sheet)
 
 email = user.email
 
@@ -68,7 +71,15 @@ def to_colombia_time(date_utc):
 df = get_group_stage_matches()
 
 
-predicciones = pronosticos_sheet.get_all_records()
+@st.cache_data(ttl=120)
+def load_predicciones(_sheet):
+    return _sheet.get_all_records()
+predicciones = load_predicciones(pronosticos_sheet)
+
+predicciones_usuario = [
+    p for p in predicciones
+    if str(p["user_id"]) == str(user_id)
+]
 
 for _, row in df.iterrows():
 
@@ -123,7 +134,7 @@ for _, row in df.iterrows():
     
         partido_id = row["MatchNumber"]
         
-        from datetime import datetime
+
         
         fecha_partido = pd.to_datetime(
             row["DateUtc"],
@@ -136,11 +147,14 @@ for _, row in df.iterrows():
             fecha_partido
         )
         
-        prediction = get_prediction(
-            predicciones,
-            user_id,
-            partido_id
+        prediction = next(
+            (
+                p for p in predicciones_usuario
+                if str(p["partido_id"]) == str(partido_id)
+            ),
+            None
         )
+                
         
         if prediction:
         
