@@ -1,4 +1,18 @@
 import streamlit as st
+from auth_utils import is_admin, get_user
+
+user = get_user()
+
+if not user:
+    st.error("Debes iniciar sesión")
+    st.stop()
+
+if not is_admin():
+    st.error("Espacio destinado únicamente para administradores")
+    st.stop()
+
+st.title("Panel de Administración")
+st.write("Contenido sensible aquí")
 
 st.title("🔒 Administración")
 
