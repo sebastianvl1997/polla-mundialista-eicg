@@ -165,11 +165,12 @@ for _, row in df.iterrows():
         
         st.markdown("##### 🎯 Tu pronóstico")
         
-        p1, p2, p3 = st.columns([2, 1, 2])
+        col_local, col_vs, col_visitante = st.columns([3, 1, 3])
         
-        with p1:
+        with col_local:
+            st.markdown(f"**{row['HomeTeam']}**")
             goles_local = st.number_input(
-                "Local",
+                label="",
                 min_value=0,
                 max_value=20,
                 value=default_local,
@@ -177,18 +178,22 @@ for _, row in df.iterrows():
                 disabled=partido_bloqueado
             )
         
-        with p2:
-            st.markdown("### -")
+        with col_vs:
+            st.markdown(
+                "<div style='text-align:center; font-size:22px; font-weight:bold;'>VS</div>",
+                unsafe_allow_html=True
+            )
         
-        with p3:
+        with col_visitante:
+            st.markdown(f"**{row['AwayTeam']}**")
             goles_visitante = st.number_input(
-                "Visitante",
+                label="",
                 min_value=0,
                 max_value=20,
                 value=default_visitante,
                 key=f"av_{partido_id}",
                 disabled=partido_bloqueado
-        )
+            )
             
     equipo_local = row["HomeTeam"]
     equipo_visitante = row["AwayTeam"]
