@@ -1,5 +1,6 @@
 import uuid
 from datetime import datetime
+from zoneinfo import ZoneInfo
 
 def get_user_by_email(sheet, email):
 
@@ -16,7 +17,11 @@ def create_user(sheet, nombre, email):
 
     user_id = str(uuid.uuid4())
 
-    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    now = datetime.now(
+        ZoneInfo("America/Bogota")
+    ).strftime(
+        "%Y-%m-%d %H:%M:%S"
+    )      
 
     sheet.append_row([
         user_id,

@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 from database.sheets import connect
-from datetime import datetime
+from datetime import datetime, timedelta
 from database.pronosticos import (
     save_prediction,
     get_prediction
@@ -141,10 +141,21 @@ for _, row in df.iterrows():
             utc=True
         ).tz_convert("America/Bogota")
         
+
+
+        fecha_partido = pd.to_datetime(
+            row["DateUtc"],
+            utc=True
+        ).tz_convert("America/Bogota")
+        
+        hora_cierre = fecha_partido - timedelta(
+            minutes=10
+        )
+        
         partido_bloqueado = (
             datetime.now(fecha_partido.tzinfo)
             >=
-            fecha_partido
+            hora_cierre
         )
         
         prediction = next(

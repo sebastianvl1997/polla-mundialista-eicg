@@ -1,4 +1,6 @@
 from datetime import datetime
+from zoneinfo import ZoneInfo
+
 
 from services.ranking_service import (
     actualizar_ranking
@@ -22,7 +24,9 @@ def actualizar_resultado(
         resultados_sheet.get_all_records()
     )
 
-    now = datetime.now().strftime(
+    now = datetime.now(
+        ZoneInfo("America/Bogota")
+    ).strftime(
         "%Y-%m-%d %H:%M:%S"
     )
     

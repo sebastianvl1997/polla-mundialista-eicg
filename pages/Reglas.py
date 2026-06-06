@@ -18,7 +18,7 @@ Los puntos obtenidos en cada partido se acumularán para conformar el ranking ge
 
 ## 🔒 Cierre de pronósticos
 
-Los pronósticos podrán modificarse libremente hasta el inicio oficial de cada partido.
+Los pronósticos podrán modificarse libremente hasta 10 minutos antes del inicio oficial de cada partido.
 
 Una vez iniciado el encuentro, el pronóstico quedará bloqueado y no podrá ser modificado.
 
