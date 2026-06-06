@@ -1,9 +1,6 @@
 import streamlit as st
 from services.auth import supabase
 from database.sheets import connect
-from database.users import get_user_by_email
-from database.users import create_user
-
 from database.users import (
     get_user_by_email,
     create_user,
@@ -13,78 +10,92 @@ from database.users import (
 st.title("Login")
 
 # --------------------
-# CALLBACK (CRÍTICO)
+# CALLBACK OAUTH
 # --------------------
 params = st.query_params
 
-if "code" in params:
+if (
+    "code" in params
+    and "user" not in st.session_state
+):
 
-    session = supabase.auth.exchange_code_for_session({
-        "auth_code": params["code"]
-    })
+    try:
 
-    st.session_state["user"] = session.user
+        session = supabase.auth.exchange_code_for_session({
+            "auth_code": params["code"]
+        })
 
-    # -------------------------
-    # Guardar en Google Sheets
-    # -------------------------
+        st.session_state["user"] = session.user
 
-    spreadsheet = connect()
+        # -------------------------
+        # Guardar en Google Sheets
+        # -------------------------
 
-    usuarios_sheet = spreadsheet.worksheet("Usuarios")
+        spreadsheet = connect()
 
-    email = session.user.email
+        usuarios_sheet = spreadsheet.worksheet(
+            "Usuarios"
+        )
 
-    nombre = session.user.user_metadata.get(
-        "full_name",
-        email
-    )
+        email = session.user.email
 
-    user_sheet = get_user_by_email(
-        usuarios_sheet,
-        email
-    )
-
-    if not user_sheet:
-
-        create_user(
-            usuarios_sheet,
-            nombre,
+        nombre = session.user.user_metadata.get(
+            "full_name",
             email
-            )
+        )
 
-    else:
-
-        update_last_activity(
+        user_sheet = get_user_by_email(
             usuarios_sheet,
             email
+        )
+
+        if not user_sheet:
+
+            create_user(
+                usuarios_sheet,
+                nombre,
+                email
             )
+
+        else:
+
+            update_last_activity(
+                usuarios_sheet,
+                email
+            )
+
+    except Exception:
+        pass
 
     st.query_params.clear()
-
     st.rerun()
-
 
 # --------------------
 # USER
 # --------------------
 user = st.session_state.get("user")
 
-
-
 if user:
-    st.success(f"Logueado: {user.email}")
+
+    st.success(
+        f"Logueado: {user.email}"
+    )
+
     st.stop()
 
 # --------------------
 # LOGIN
 # --------------------
 if st.button("Login con Google"):
+
     data = supabase.auth.sign_in_with_oauth({
         "provider": "google",
         "options": {
-            "redirect_to": "https://polla-mundialista-eicg-svl.streamlit.app"
+            "redirect_to":
+            "https://polla-mundialista-eicg-svl.streamlit.app"
         }
     })
 
-    st.markdown(f"[Continuar con Google]({data.url})")
+    st.markdown(
+        f"[Continuar con Google]({data.url})"
+    )
