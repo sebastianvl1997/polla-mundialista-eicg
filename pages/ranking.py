@@ -1,9 +1,14 @@
 import streamlit as st
 import pandas as pd
+from services.sync_results_service import (
+    sincronizar_resultados
+)
 
 from database.sheets import connect
 
 st.title("🏆 Ranking General")
+
+sincronizar_resultados()
 
 spreadsheet = connect()
 
