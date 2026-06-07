@@ -45,7 +45,9 @@ def update_last_activity(sheet, email):
 
         if row["email"].lower() == email.lower():
 
-            now = datetime.now().strftime(
+            now = datetime.now(
+                ZoneInfo("America/Bogota")
+            ).strftime(
                 "%Y-%m-%d %H:%M:%S"
             )
 
