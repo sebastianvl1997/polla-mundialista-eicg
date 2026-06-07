@@ -261,6 +261,7 @@ for _, row in df.iterrows():
         ""
     )
 
+if not partido_bloqueado:
     if st.button(
         "Guardar pronóstico",
         key=f"save_{partido_id}",
