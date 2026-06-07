@@ -7,6 +7,22 @@ from database.users import (
     update_last_activity
 )
 
+from datetime import datetime, timedelta
+
+if "session" in st.session_state:
+    session = st.session_state["session"]
+
+    # verificar expiración por inactividad
+    last = st.session_state.get("last_activity")
+
+    if last:
+        if datetime.now() - last > timedelta(minutes=30):
+            st.session_state.clear()
+            st.warning("Sesión expirada por inactividad")
+            st.stop()
+
+    st.session_state["last_activity"] = datetime.now()
+
 st.title("Login")
 
 # --------------------
@@ -25,7 +41,9 @@ if (
             "auth_code": params["code"]
         })
 
+        st.session_state["session"] = session
         st.session_state["user"] = session.user
+        st.session_state["last_activity"] = datetime.now()
 
         # -------------------------
         # Guardar en Google Sheets
