@@ -49,58 +49,32 @@ st.title("Login")
 # --------------------
 params = st.query_params
 
-if (
-    "code" in params
-    and "user" not in st.session_state
-):
+if "code" in params and "user" not in st.session_state:
 
     try:
 
-        
-        # session = supabase.auth.exchange_code_for_session({
-        #     "auth_code": params["code"]
-        # })
+        session = supabase.auth.exchange_code_for_session({
+            "auth_code": params["code"]
+        })
 
-        st.session_state["session"] = session
-        st.session_state["user"] = session.user
-        st.session_state["last_activity"] = datetime.now()
+        if session and session.user:
 
-        # -------------------------
-        # Guardar en Google Sheets
-        # -------------------------
+            st.session_state["session"] = session
+            st.session_state["user"] = session.user
+            st.session_state["last_activity"] = datetime.now()
 
-        spreadsheet = connect()
+            spreadsheet = connect()
+            usuarios_sheet = spreadsheet.worksheet("Usuarios")
 
-        usuarios_sheet = spreadsheet.worksheet(
-            "Usuarios"
-        )
+            email = session.user.email
+            nombre = session.user.user_metadata.get("full_name", email)
 
-        email = session.user.email
+            user_sheet = get_user_by_email(usuarios_sheet, email)
 
-        nombre = session.user.user_metadata.get(
-            "full_name",
-            email
-        )
-
-        user_sheet = get_user_by_email(
-            usuarios_sheet,
-            email
-        )
-
-        if not user_sheet:
-
-            create_user(
-                usuarios_sheet,
-                nombre,
-                email
-            )
-
-        else:
-
-            update_last_activity(
-                usuarios_sheet,
-                email
-            )
+            if not user_sheet:
+                create_user(usuarios_sheet, nombre, email)
+            else:
+                update_last_activity(usuarios_sheet, email)
 
     except Exception:
         pass
