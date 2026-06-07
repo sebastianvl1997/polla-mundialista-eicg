@@ -1,6 +1,20 @@
+import sys
+import os
+
+sys.path.append(
+    os.path.dirname(
+        os.path.dirname(
+            os.path.abspath(__file__)
+        )
+    )
+)
+
+from database.sheets import connect
 import re
 import pdfplumber
 import pandas as pd
+
+from database.sheets import connect
 
 PDF_FILE = r"data/SquadLists-English.pdf"
 
@@ -29,7 +43,6 @@ with pdfplumber.open(PDF_FILE) as pdf:
 
         for line in lines:
 
-            # Selección
             team_match = re.match(
                 r"^(.*?) \(([A-Z]{3})\)$",
                 line
@@ -42,7 +55,6 @@ with pdfplumber.open(PDF_FILE) as pdf:
             if current_team is None:
                 continue
 
-            # Jugadores
             m = re.match(
                 r"^\d+\s+(GK|DF|MF|FW)\s+([A-ZÀ-ÖØ-Ý' -]+)\s+(.+?)\s+\d{2}/\d{2}/\d{4}",
                 line
@@ -51,14 +63,15 @@ with pdfplumber.open(PDF_FILE) as pdf:
             if m:
 
                 codigo_posicion = m.group(1)
+
                 apellido = m.group(2).title().strip()
+
                 resto = m.group(3).strip()
 
                 nombre = resto.split()[0]
 
                 jugador = f"{nombre} {apellido}"
 
-                # Eliminar duplicación inicial
                 jugador_parts = jugador.split()
 
                 if (
@@ -85,14 +98,25 @@ df = pd.DataFrame(
     ]
 )
 
-print(df.head(30))
+print(df.head())
 print()
 print("TOTAL:", len(df))
 
-df.to_csv(
-    "jugadores.csv",
-    index=False,
-    encoding="utf-8-sig"
+# -------------------------
+# Subir a Google Sheets
+# -------------------------
+
+spreadsheet = connect()
+
+jugadores_sheet = spreadsheet.worksheet(
+    "Jugadores"
 )
 
-print("CSV generado: jugadores.csv")
+jugadores_sheet.clear()
+
+jugadores_sheet.update(
+    [df.columns.values.tolist()]
+    + df.values.tolist()
+)
+
+print("Hoja Jugadores actualizada.")

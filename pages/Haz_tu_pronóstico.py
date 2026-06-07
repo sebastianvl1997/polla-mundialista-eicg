@@ -229,28 +229,34 @@ for _, row in df.iterrows():
         )
     ]
     
-    lista_jugadores = sorted(
-        (
-            f"{row['jugador']} ({row['equipo']} - {row['posicion']})"
-            for _, row in jugadores_partido.iterrows()
-        )
-    )
+    opciones_goleador = {
+        f"{r['jugador']} ({r['equipo']} - {r['posicion']})":
+        r["jugador"]
+        for _, r in jugadores_partido.iterrows()
+    }
     
-    opciones_goleador = [""] + lista_jugadores
+    lista_display = [""] + sorted(
+        opciones_goleador.keys()
+    )
     
     indice_default = 0
     
-    if default_goleador in opciones_goleador:
-        indice_default = opciones_goleador.index(
-            default_goleador
-        )
+    for i, texto in enumerate(lista_display):
+        if opciones_goleador.get(texto, "") == default_goleador:
+            indice_default = i
+            break
     
-    goleador = st.selectbox(
+    goleador_display = st.selectbox(
         "🎯 Goleador del partido",
-        options=opciones_goleador,
+        options=lista_display,
         index=indice_default,
         key=f"scorer_{partido_id}",
         disabled=partido_bloqueado
+    )
+    
+    goleador = opciones_goleador.get(
+        goleador_display,
+        ""
     )
 
     if not partido_bloqueado:
