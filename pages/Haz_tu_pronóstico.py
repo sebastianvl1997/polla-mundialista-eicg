@@ -19,19 +19,21 @@ if not user:
     st.warning("Debes iniciar sesión")
     st.stop()
 
-spreadsheet = connect()
+@st.cache_resource
+def get_spreadsheet():
+    return connect()
 
-usuarios_sheet = spreadsheet.worksheet(
-    "Usuarios"
-)
+spreadsheet = get_spreadsheet()
 
-pronosticos_sheet = spreadsheet.worksheet(
-    "Pronosticos"
-)
+@st.cache_resource
+def get_sheets(_spreadsheet):
+    return (
+        _spreadsheet.worksheet("Usuarios"),
+        _spreadsheet.worksheet("Pronosticos"),
+        _spreadsheet.worksheet("Jugadores"),
+    )
 
-jugadores_sheet = spreadsheet.worksheet(
-    "Jugadores"
-)
+usuarios_sheet, pronosticos_sheet, jugadores_sheet = get_sheets(spreadsheet)
 
 @st.cache_data(ttl=300)
 def load_jugadores(_sheet):
@@ -76,10 +78,15 @@ def load_predicciones(_sheet):
     return _sheet.get_all_records()
 predicciones = load_predicciones(pronosticos_sheet)
 
-predicciones_usuario = [
-    p for p in predicciones
-    if str(p["user_id"]) == str(user_id)
-]
+@st.cache_data(ttl=120)
+def get_user_predictions(_sheet, user_id):
+    data = _sheet.get_all_records()
+    return [
+        p for p in data
+        if str(p.get("user_id")) == str(user_id)
+    ]
+
+predicciones_usuario = get_user_predictions(pronosticos_sheet, user_id)
 
 for _, row in df.iterrows():
 
@@ -135,11 +142,6 @@ for _, row in df.iterrows():
         partido_id = row["MatchNumber"]
         
 
-        
-        fecha_partido = pd.to_datetime(
-            row["DateUtc"],
-            utc=True
-        ).tz_convert("America/Bogota")
         
 
 
@@ -259,12 +261,12 @@ for _, row in df.iterrows():
         ""
     )
 
-    if not partido_bloqueado:
-        if st.button(
-            "Guardar pronóstico",
-            key=f"save_{partido_id}"
-        ):
-        
+    if st.button(
+        "Guardar pronóstico",
+        key=f"save_{partido_id}",
+        disabled=partido_bloqueado
+    ):
+        with st.spinner("Guardando..."):
             save_prediction(
                 pronosticos_sheet,
                 user_id,
@@ -273,10 +275,10 @@ for _, row in df.iterrows():
                 goles_visitante,
                 goleador
             )
+    
+        st.success("Pronóstico guardado")
         
-            st.success(
-                "Pronóstico guardado"
-            )
+
     
     else:
         st.info("🔒 Pronóstico cerrado")

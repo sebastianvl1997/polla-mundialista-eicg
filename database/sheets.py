@@ -4,6 +4,7 @@ import streamlit as st
 
 SPREADSHEET_ID = "1ny7DoyHOd4MipYtBWew9EoQYiXFgvgyaerGRZVhH3UQ"
 
+@st.cache_resource
 def connect():
 
     if os.path.exists(
