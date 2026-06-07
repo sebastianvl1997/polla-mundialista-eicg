@@ -11,17 +11,34 @@ from datetime import datetime, timedelta
 
 supabase.auth.get_session()
 
-if "session" in st.session_state:
-    session = st.session_state["session"]
+# -------------------------
+# RESTAURAR SESIÓN (REFRESH FIX)
+# -------------------------
+if "user" not in st.session_state:
 
-    # verificar expiración por inactividad
+    try:
+        session = supabase.auth.get_session()
+
+        if session and session.user:
+
+            st.session_state["session"] = session
+            st.session_state["user"] = session.user
+            st.session_state["last_activity"] = datetime.now()
+
+    except Exception:
+        pass
+    
+    
+
+if "user" in st.session_state:
+
     last = st.session_state.get("last_activity")
 
-    if last:
-        if datetime.now() - last > timedelta(minutes=30):
-            st.session_state.clear()
-            st.warning("Sesión expirada por inactividad")
-            st.stop()
+    if last and datetime.now() - last > timedelta(minutes=30):
+
+        st.session_state.clear()
+        st.warning("Sesión expirada por inactividad")
+        st.stop()
 
     st.session_state["last_activity"] = datetime.now()
 
@@ -40,9 +57,9 @@ if (
     try:
 
         
-        session = supabase.auth.exchange_code_for_session({
-            "auth_code": params["code"]
-        })
+        # session = supabase.auth.exchange_code_for_session({
+        #     "auth_code": params["code"]
+        # })
 
         st.session_state["session"] = session
         st.session_state["user"] = session.user
