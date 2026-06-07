@@ -49,32 +49,58 @@ st.title("Login")
 # --------------------
 params = st.query_params
 
-if "code" in params and "user" not in st.session_state:
+if (
+    "code" in params
+    and "user" not in st.session_state
+):
 
     try:
 
+        
         session = supabase.auth.exchange_code_for_session({
             "auth_code": params["code"]
         })
 
-        if session and session.user:
+        st.session_state["session"] = session
+        st.session_state["user"] = session.user
+        st.session_state["last_activity"] = datetime.now()
 
-            st.session_state["session"] = session
-            st.session_state["user"] = session.user
-            st.session_state["last_activity"] = datetime.now()
+        # -------------------------
+        # Guardar en Google Sheets
+        # -------------------------
 
-            spreadsheet = connect()
-            usuarios_sheet = spreadsheet.worksheet("Usuarios")
+        spreadsheet = connect()
 
-            email = session.user.email
-            nombre = session.user.user_metadata.get("full_name", email)
+        usuarios_sheet = spreadsheet.worksheet(
+            "Usuarios"
+        )
 
-            user_sheet = get_user_by_email(usuarios_sheet, email)
+        email = session.user.email
 
-            if not user_sheet:
-                create_user(usuarios_sheet, nombre, email)
-            else:
-                update_last_activity(usuarios_sheet, email)
+        nombre = session.user.user_metadata.get(
+            "full_name",
+            email
+        )
+
+        user_sheet = get_user_by_email(
+            usuarios_sheet,
+            email
+        )
+
+        if not user_sheet:
+
+            create_user(
+                usuarios_sheet,
+                nombre,
+                email
+            )
+
+        else:
+
+            update_last_activity(
+                usuarios_sheet,
+                email
+            )
 
     except Exception:
         pass
