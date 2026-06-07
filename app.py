@@ -9,6 +9,8 @@ from database.users import (
 
 from datetime import datetime, timedelta
 
+session = supabase.auth.get_session()
+
 if "session" in st.session_state:
     session = st.session_state["session"]
 
@@ -37,7 +39,7 @@ if (
 
     try:
 
-        session = supabase.auth.exchange_code_for_session({
+        session = supabase.auth.get_session({
             "auth_code": params["code"]
         })
 
