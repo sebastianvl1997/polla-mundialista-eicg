@@ -9,24 +9,6 @@ from database.users import (
 
 from datetime import datetime, timedelta
 
-supabase.auth.get_session()
-
-# -------------------------
-# RESTAURAR SESIÓN (REFRESH FIX)
-# -------------------------
-if "user" not in st.session_state:
-
-    try:
-        session = supabase.auth.get_session()
-
-        if session and session.user:
-
-            st.session_state["session"] = session
-            st.session_state["user"] = session.user
-            st.session_state["last_activity"] = datetime.now()
-
-    except Exception:
-        pass
     
     
 
@@ -49,10 +31,7 @@ st.title("Login")
 # --------------------
 params = st.query_params
 
-if (
-    "code" in params
-    and "user" not in st.session_state
-):
+if "code" in params:
 
     try:
 
