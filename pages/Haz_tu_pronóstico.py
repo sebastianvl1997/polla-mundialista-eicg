@@ -261,27 +261,27 @@ for _, row in df.iterrows():
         ""
     )
 
-if not partido_bloqueado:
-    if st.button(
-        "Guardar pronóstico",
-        key=f"save_{partido_id}",
-        disabled=partido_bloqueado
-    ):
-        with st.spinner("Guardando..."):
-            save_prediction(
-                pronosticos_sheet,
-                user_id,
-                partido_id,
-                goles_local,
-                goles_visitante,
-                goleador
-            )
-    
-        st.success("Pronóstico guardado")
+    if not partido_bloqueado:
+        if st.button(
+            "Guardar pronóstico",
+            key=f"save_{partido_id}",
+            disabled=partido_bloqueado
+        ):
+            with st.spinner("Guardando..."):
+                save_prediction(
+                    pronosticos_sheet,
+                    user_id,
+                    partido_id,
+                    goles_local,
+                    goles_visitante,
+                    goleador
+                )
         
-
+            st.success("Pronóstico guardado")
+            
     
-    else:
-        st.info("🔒 Pronóstico cerrado")
+        
+        else:
+            st.info("🔒 Pronóstico cerrado")
 
     st.divider()
