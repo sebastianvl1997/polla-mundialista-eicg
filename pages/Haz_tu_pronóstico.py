@@ -281,7 +281,7 @@ for _, row in df.iterrows():
             
     
         
-        else:
-            st.info("🔒 Pronóstico cerrado")
+    else:
+        st.info("🔒 Pronóstico cerrado")
 
     st.divider()
