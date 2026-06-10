@@ -65,7 +65,7 @@ Puntaje: **3 puntos**
 
 ### ⚽ Goleador del partido
 
-Si se acierta el goleador del encuentro, se obtendrá:
+Si se acierta cualquier jugador que haga al menos un gol en el encuentro, se obtendrá:
 
 **1 punto adicional**
 
@@ -74,7 +74,7 @@ Este punto se suma a los puntos obtenidos por el resultado.
 Ejemplo:
 
 - Resultado oficial: 2-1
-- Goleador real: Julián Álvarez
+- Goleadores reales: Julián Álvarez, Lionel Messi
 - Pronóstico: 2-1
 - Goleador pronosticado: Julián Álvarez
 
