@@ -12,6 +12,15 @@ sincronizar_resultados()
 
 spreadsheet = connect()
 
+from services.ranking_service import actualizar_ranking
+
+actualizar_ranking(
+    spreadsheet.worksheet("Usuarios"),
+    spreadsheet.worksheet("Pronosticos"),
+    spreadsheet.worksheet("Resultados"),
+    spreadsheet.worksheet("Ranking")
+)
+
 ranking_sheet = spreadsheet.worksheet(
     "Ranking"
 )
