@@ -156,6 +156,7 @@ def evaluar_pronostico(pronostico, resultado):
             goleador_pron
             and goleador_pron in goleadores_reales
         ):
+            goleador_correcto = True
             puntos += 1
 
     return {
