@@ -151,7 +151,7 @@ for _, row in df.iterrows():
         ).tz_convert("America/Bogota")
         
         hora_cierre = fecha_partido - timedelta(
-            minutes=830
+            minutes=1260
         )
         
         partido_bloqueado = (
