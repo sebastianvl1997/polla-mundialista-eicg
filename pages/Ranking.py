@@ -8,7 +8,7 @@ from database.sheets import connect
 
 st.title("🏆 Ranking General")
 
-sincronizar_resultados()
+# sincronizar_resultados()
 
 spreadsheet = connect()
 
