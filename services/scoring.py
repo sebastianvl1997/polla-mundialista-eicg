@@ -203,15 +203,9 @@ def calcular_ranking(pronosticos, resultados):
 
         if evaluacion["exacto"]:
             ranking[user_id]["exactos"] += 1
-            
-            if evaluacion["goleador"]:
-                ranking[user_id]["goleadores"] += 1
 
         if evaluacion["resultado"]:
             ranking[user_id]["resultados"] += 1
-            
-            if evaluacion["goleador"]:
-                ranking[user_id]["goleadores"] += 1
 
         if evaluacion["goleador"]:
             ranking[user_id]["goleadores"] += 1
