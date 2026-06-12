@@ -75,3 +75,17 @@ def obtener_goleadores(partido_id):
         )
 
         return ""
+    
+    
+    import requests
+
+SCORERS_URL = (
+    "https://raw.githubusercontent.com/"
+    "rezarahiminia/worldcup2026/main/"
+    "football.matches.json"
+)
+
+response = requests.get(SCORERS_URL)
+data = response.json()
+
+print(data[0])
