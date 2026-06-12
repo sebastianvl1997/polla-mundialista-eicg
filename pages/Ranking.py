@@ -8,18 +8,18 @@ from database.sheets import connect
 
 st.title("🏆 Ranking General")
 
-# sincronizar_resultados()
+sincronizar_resultados()
 
 spreadsheet = connect()
 
-from services.ranking_service import actualizar_ranking
+# from services.ranking_service import actualizar_ranking
 
-actualizar_ranking(
-    spreadsheet.worksheet("Usuarios"),
-    spreadsheet.worksheet("Pronosticos"),
-    spreadsheet.worksheet("Resultados"),
-    spreadsheet.worksheet("Ranking")
-)
+# actualizar_ranking(
+#     spreadsheet.worksheet("Usuarios"),
+#     spreadsheet.worksheet("Pronosticos"),
+#     spreadsheet.worksheet("Resultados"),
+#     spreadsheet.worksheet("Ranking")
+# )
 
 ranking_sheet = spreadsheet.worksheet(
     "Ranking"
