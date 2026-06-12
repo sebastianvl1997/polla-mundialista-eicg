@@ -17,8 +17,8 @@ def sincronizar_resultados():
 
     for _, row in df.iterrows():
 
-        hg = row.get("HomeGoals")
-        ag = row.get("AwayGoals")
+        hg = row.get("HomeTeamScore")
+        ag = row.get("AwayTeamScore")
 
         if pd.isna(hg) or pd.isna(ag):
             continue
