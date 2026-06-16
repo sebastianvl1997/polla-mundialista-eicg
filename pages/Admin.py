@@ -86,3 +86,7 @@ if st.button(
     st.success(
         "Resultado actualizado y ranking recalculado"
     )
+
+
+if st.button("Sincronizar resultados"):
+    sincronizar_resultados()
