@@ -78,18 +78,18 @@ st.caption(
 # Última actualización
 # ----------------------------------------
 
-# resultados = resultados_sheet.get_all_records()
+resultados = resultados_sheet.get_all_records()
 
-# fechas = [
-#     str(r["ultima_actualizacion"]).strip()
-#     for r in resultados
-#     if str(r["ultima_actualizacion"]).strip()
-# ]
+fechas = [
+    str(r["ultima_actualizacion"]).strip()
+    for r in resultados
+    if str(r["ultima_actualizacion"]).strip()
+]
 
-# if fechas:
+if fechas:
 
-#     ultima_actualizacion = max(fechas)
+    ultima_actualizacion = max(fechas)
 
-#     st.caption(
-#         f"Nota: Ranking actualizado con resultados oficiales al {ultima_actualizacion}."
-#     )
+    st.caption(
+        f"Nota: Ranking actualizado con resultados oficiales al {ultima_actualizacion}."
+    )
