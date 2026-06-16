@@ -1,5 +1,6 @@
 import streamlit as st
 from auth_utils import is_admin, get_user
+from services.sync_results_service import sincronizar_resultados
 
 user = get_user()
 
