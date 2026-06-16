@@ -16,12 +16,15 @@ def sincronizar_resultados():
     df = get_all_matches()
 
     for _, row in df.iterrows():
+   
 
         hg = row.get("HomeTeamScore")
         ag = row.get("AwayTeamScore")
 
         if pd.isna(hg) or pd.isna(ag):
             continue
+
+        print("Partido", row["MatchNumber"])
 
         actualizar_resultado(
             resultados_sheet,
