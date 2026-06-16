@@ -20,9 +20,13 @@ def actualizar_resultado(
     goles_visitante,
 ):
 
+    print("Leyendo hoja Resultados...")
+
     resultados = (
         resultados_sheet.get_all_records()
     )
+    print("Lectura completada")
+
 
     now = datetime.now(
         ZoneInfo("America/Bogota")
