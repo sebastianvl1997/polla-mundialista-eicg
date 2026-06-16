@@ -8,7 +8,10 @@ from database.sheets import connect
 
 st.title("🏆 Ranking General")
 
-sincronizar_resultados()
+try:
+    sincronizar_resultados()
+except Exception as e:
+    st.warning(f"No se pudo sincronizar: {e}")
 
 spreadsheet = connect()
 
