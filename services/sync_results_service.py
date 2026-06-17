@@ -12,6 +12,8 @@ def sincronizar_resultados():
     pronosticos_sheet = spreadsheet.worksheet("Pronosticos")
     resultados_sheet = spreadsheet.worksheet("Resultados")
     ranking_sheet = spreadsheet.worksheet("Ranking")
+    
+    resultados = resultados_sheet.get_all_records()
 
     df = get_all_matches()
 
@@ -31,6 +33,7 @@ def sincronizar_resultados():
             ranking_sheet,
             usuarios_sheet,
             pronosticos_sheet,
+            resultados,   
             row["MatchNumber"],
             int(hg),
             int(ag)

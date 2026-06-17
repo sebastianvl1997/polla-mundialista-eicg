@@ -15,6 +15,7 @@ def actualizar_resultado(
     ranking_sheet,
     usuarios_sheet,
     pronosticos_sheet,
+    resultados,
     partido_id,
     goles_local,
     goles_visitante,
@@ -22,10 +23,10 @@ def actualizar_resultado(
 
     print("Leyendo hoja Resultados...")
 
-    resultados = (
-        resultados_sheet.get_all_records()
-    )
-    print("Lectura completada")
+    # resultados = (
+    #     resultados_sheet.get_all_records()
+    # )
+    # print("Lectura completada")
 
 
     now = datetime.now(
