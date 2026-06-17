@@ -1,6 +1,9 @@
 from database.sheets import connect
 from services.fixture_service import get_all_matches
 from services.results_service import actualizar_resultado
+from services.ranking_service import (
+    actualizar_ranking
+)
 import pandas as pd
 
 
@@ -38,3 +41,10 @@ def sincronizar_resultados():
             int(hg),
             int(ag)
         )
+        
+    actualizar_ranking(
+        usuarios_sheet,
+        pronosticos_sheet,
+        resultados_sheet,
+        ranking_sheet
+    )

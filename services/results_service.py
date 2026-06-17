@@ -87,11 +87,11 @@ def actualizar_resultado(
             now
         ])
 
-    # recalcular ranking
+    # # recalcular ranking
 
-    actualizar_ranking(
-        usuarios_sheet,
-        pronosticos_sheet,
-        resultados_sheet,
-        ranking_sheet
-    )
+    # actualizar_ranking(
+    #     usuarios_sheet,
+    #     pronosticos_sheet,
+    #     resultados_sheet,
+    #     ranking_sheet
+    # )
