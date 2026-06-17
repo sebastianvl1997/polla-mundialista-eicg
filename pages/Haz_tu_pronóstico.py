@@ -249,7 +249,7 @@ for _, row in df.iterrows():
             break
     
     goleador_display = st.selectbox(
-        "🎯 Goleador del partido",
+        "🎯 Hace gol en el partido",
         options=lista_display,
         index=indice_default,
         key=f"scorer_{partido_id}",
