@@ -42,8 +42,11 @@ def calcular_puntos_pronostico(pronostico, resultado):
 
     # Goleador
     # Caso especial: empate 0-0
+# Caso especial: empate 0-0
     if r_gl == 0 and r_gv == 0:
-        puntos += 1
+    
+        if p_gl == 0 and p_gv == 0:
+            puntos += 1
     
     else:
     
