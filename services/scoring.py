@@ -120,7 +120,7 @@ def evaluar_pronostico(pronostico, resultado):
             puntos = 3
 
     # Caso especial: empate 0-0
-    if r_gl == 0 and r_gv == 0:
+    if r_gl == 0 and r_gv == 0 and p_gl == 0 and p_gv == 0:
         
         goleador_correcto = True
         puntos += 1
