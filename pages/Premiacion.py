@@ -36,19 +36,19 @@ def pagina_premiacion():
     # IMAGEN PRINCIPAL DEL PODIO
     st.image("assets/premiacion.png", use_container_width=True)
 
-    st.markdown("---")
+    # st.markdown("---")
 
-    col1, col2, col3 = st.columns(3)
+    # col1, col2, col3 = st.columns(3)
 
-    with col1:
-        st.metric(label="🥇 1er Puesto", value="$700.000")
+    # with col1:
+    #     st.metric(label="🥇 1er Puesto", value="$700.000")
 
-    with col2:
-        st.metric(label="🥈 2do Puesto", value="$100.000")
+    # with col2:
+    #     st.metric(label="🥈 2do Puesto", value="$100.000")
 
-    with col3:
-        st.metric(label="🥉 3er Puesto", value="$50.000")
+    # with col3:
+    #     st.metric(label="🥉 3er Puesto", value="$50.000")
 
-    st.markdown("---")
+    # st.markdown("---")
 
-    st.success("🎉 ¡Que gane el mejor y empiece la fiesta mundialista!")
+    # st.success("🎉 ¡Que gane el mejor y empiece la fiesta mundialista!")
