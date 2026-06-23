@@ -7,9 +7,8 @@ Created on Tue Jun 23 01:47:07 2026
 
 import streamlit as st
 
-def pagina_premiacion():
 
-    st.title("🏆 Premiación")
+st.title("🏆 Premiación")
 
     # st.markdown("""
     # <style>
@@ -34,7 +33,7 @@ def pagina_premiacion():
     # st.markdown('<div class="premiacion-sub">Los mejores se llevan los mejores premios</div>', unsafe_allow_html=True)
 
     # IMAGEN PRINCIPAL DEL PODIO
-    st.image("assets/premiacion.png", use_container_width=True)
+st.image("assets/premiacion.png", use_container_width=True)
 
     # st.markdown("---")
 
