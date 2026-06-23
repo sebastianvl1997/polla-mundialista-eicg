@@ -11,44 +11,117 @@ def pagina_premiacion():
 
     st.title("🏆 Premiación")
 
-    st.markdown("""
-    <style>
-    .premiacion-title {
-        text-align: center;
-        font-size: 40px;
-        font-weight: 800;
-        color: #FFD700;
-        margin-bottom: 10px;
-    }
+st.markdown("""
+# ⚽ Reglas de la Polla Mundialista EICG 2026
 
-    .premiacion-sub {
-        text-align: center;
-        font-size: 18px;
-        color: #ddd;
-        margin-bottom: 30px;
-    }
-    </style>
-    """, unsafe_allow_html=True)
+## 🎯 Objetivo
 
-    st.markdown('<div class="premiacion-title">¡LA GLORIA TIENE SUS RECOMPENSAS!</div>', unsafe_allow_html=True)
-    st.markdown('<div class="premiacion-sub">Los mejores se llevan los mejores premios</div>', unsafe_allow_html=True)
+Cada participante deberá pronosticar:
 
-    # IMAGEN PRINCIPAL DEL PODIO
-    # st.image("premiacion.png", use_container_width=True)
+- El marcador del partido.
+- El goleador del encuentro.
 
-    st.markdown("---")
+Los puntos obtenidos en cada partido se acumularán para conformar el ranking general.
 
-    col1, col2, col3 = st.columns(3)
+---
 
-    with col1:
-        st.metric(label="🥇 1er Puesto", value="$700.000")
+## 🔒 Cierre de pronósticos
 
-    with col2:
-        st.metric(label="🥈 2do Puesto", value="$100.000")
+Los pronósticos podrán modificarse libremente hasta 10 minutos antes del inicio oficial de cada partido.
 
-    with col3:
-        st.metric(label="🥉 3er Puesto", value="$50.000")
+Una vez iniciado el encuentro, el pronóstico quedará bloqueado y no podrá ser modificado.
 
-    st.markdown("---")
+---
 
-    st.success("🎉 ¡Que gane el mejor y empiece la fiesta mundialista!")
+## 🏆 Sistema de puntuación
+
+### ✅ Marcador exacto
+
+Si se acierta exactamente el marcador del partido, se obtendrán:
+
+**5 puntos**
+
+Ejemplo:
+
+- Resultado oficial: 2-1
+- Pronóstico: 2-1
+
+Puntaje: **5 puntos**
+
+---
+
+### ✅ Ganador o empate
+
+Si no se acierta el marcador exacto, pero sí el resultado del partido (victoria local, empate o victoria visitante), se obtendrán:
+
+**3 puntos**
+
+Ejemplos:
+
+- Resultado oficial: 3-1
+- Pronóstico: 1-0
+
+Puntaje: **3 puntos**
+
+---
+
+- Resultado oficial: 1-1
+- Pronóstico: 0-0
+
+Puntaje: **3 puntos**
+
+---
+
+### ⚽ Goleador del partido
+
+Si se acierta cualquier jugador que haga al menos un gol en el encuentro, se obtendrá:
+
+**1 punto adicional**
+
+Este punto se suma a los puntos obtenidos por el resultado.
+
+Ejemplo:
+
+- Resultado oficial: 2-1
+- Goleadores reales: Julián Álvarez, Lionel Messi
+- Pronóstico: 2-1
+- Goleador pronosticado: Julián Álvarez
+
+Puntaje:
+
+- Marcador exacto: 5 puntos
+- Goleador: 1 punto
+
+**Total: 6 puntos**
+
+---
+
+## ⚪ Partidos que terminan 0-0
+
+En los empates 0-0 se considera acertado el "goleador inexistente".
+
+Por tanto:
+
+- Acertar exactamente el 0-0 otorga 5 puntos.
+- Se suma 1 punto adicional correspondiente al goleador inexistente.
+
+**Puntaje total: 6 puntos.**
+
+---
+
+## 📈 Ranking general
+
+Los puntos obtenidos en todos los partidos se acumularán para conformar el ranking general de la competencia.
+
+---
+
+## 🔮 Transparencia
+
+Todos los participantes podrán consultar los pronósticos realizados por los demás usuarios mediante la pestaña **Pronósticos**, garantizando la transparencia y el juego limpio.
+
+---
+
+## 🤝 Espíritu de la competencia
+
+La finalidad principal de la Polla Mundialista EICG 2026 es fomentar la integración, la diversión y la sana competencia entre todos los participantes.
+""")
