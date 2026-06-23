@@ -11,27 +11,27 @@ def pagina_premiacion():
 
     st.title("🏆 Premiación")
 
-    st.markdown("""
-    <style>
-    .premiacion-title {
-        text-align: center;
-        font-size: 40px;
-        font-weight: 800;
-        color: #FFD700;
-        margin-bottom: 10px;
-    }
+    # st.markdown("""
+    # <style>
+    # .premiacion-title {
+    #     text-align: center;
+    #     font-size: 40px;
+    #     font-weight: 800;
+    #     color: #FFD700;
+    #     margin-bottom: 10px;
+    # }
 
-    .premiacion-sub {
-        text-align: center;
-        font-size: 18px;
-        color: #ddd;
-        margin-bottom: 30px;
-    }
-    </style>
-    """, unsafe_allow_html=True)
+    # .premiacion-sub {
+    #     text-align: center;
+    #     font-size: 18px;
+    #     color: #ddd;
+    #     margin-bottom: 30px;
+    # }
+    # </style>
+    # """, unsafe_allow_html=True)
 
-    st.markdown('<div class="premiacion-title">¡LA GLORIA TIENE SUS RECOMPENSAS!</div>', unsafe_allow_html=True)
-    st.markdown('<div class="premiacion-sub">Los mejores se llevan los mejores premios</div>', unsafe_allow_html=True)
+    # st.markdown('<div class="premiacion-title">¡LA GLORIA TIENE SUS RECOMPENSAS!</div>', unsafe_allow_html=True)
+    # st.markdown('<div class="premiacion-sub">Los mejores se llevan los mejores premios</div>', unsafe_allow_html=True)
 
     # IMAGEN PRINCIPAL DEL PODIO
     st.image("assets/premiacion.png", use_container_width=True)
