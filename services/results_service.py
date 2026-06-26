@@ -58,6 +58,17 @@ def actualizar_resultado(
                 else goleador_auto
             )
 
+
+            if (
+                int(row.get("goles_local", 0)) == goles_local
+                and
+                int(row.get("goles_visitante", 0)) == goles_visitante
+                and
+                str(row.get("goleador_final", "")).strip() == goleador_final
+            ):
+                actualizado = True
+                break
+                
             resultados_sheet.update(
                 f"B{idx}:G{idx}",
                 [[
