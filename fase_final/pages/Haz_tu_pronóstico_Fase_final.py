@@ -281,7 +281,7 @@ for tab, numero_ronda in zip(
                 ).tz_convert("America/Bogota")
                 
                 hora_cierre = fecha_partido - timedelta(
-                    minutes=10
+                    minutes=1
                 )
                 
                 partido_bloqueado = (
