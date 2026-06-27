@@ -127,3 +127,29 @@ def get_flag_url(country_name):
     return f"https://flagcdn.com/w40/{code}.png"
 
 
+def get_knockout_matches():
+
+    df = get_all_matches()
+
+    fases = [
+        "Round of 32",
+        "Round of 16",
+        "Quarter-finals",
+        "Semi-finals",
+        "Third-place play-off",
+        "Final"
+    ]
+
+    if "Group" in df.columns:
+
+        df = df[
+            ~df["Group"].astype(str).str.match(r"^[A-Z]$")
+        ]
+
+    if "RoundName" in df.columns:
+
+        df = df[
+            df["RoundName"].isin(fases)
+        ]
+
+    return df
