@@ -5,6 +5,9 @@ ROOT = Path(__file__).resolve().parent.parent
 
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
+    
+print(ROOT)
+print(sys.path)
 import streamlit as st
 from services.auth import supabase
 from database.sheets import connect
@@ -116,7 +119,7 @@ if st.button("Login con Google"):
         "provider": "google",
         "options": {
             "redirect_to":
-            "https://polla-mundialista-eicg-svl.streamlit.app"
+            "https://https://polla-mundialista-eicg-fase-final.streamlit.app"
         }
     })
 
