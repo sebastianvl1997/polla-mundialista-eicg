@@ -116,28 +116,34 @@ predicciones_usuario = get_user_predictions(pronosticos_sheet, user_id)
 df = df[df["RoundNumber"] >= 4]
 
 rondas = {
-    4: "Dieciseisavos de final",
-    5: "Octavos de final",
-    6: "Cuartos de final",
+    4: "Dieciseisavos",
+    5: "Octavos",
+    6: "Cuartos",
     7: "Semifinales",
-    8: "Final y tercer puesto"
+    8: "Final y 3.er puesto"
 }
 
-rondas_disponibles = sorted(
-    df["RoundNumber"].astype(int).unique()
+tabs = st.tabs(
+    [
+        rondas[r]
+        for r in sorted(df["RoundNumber"].unique())
+    ]
 )
 
-ronda = st.selectbox(
-    "🏆 Selecciona la fase",
-    rondas_disponibles,
-    format_func=lambda x: rondas[int(x)]
-)
+for tab, numero_ronda in zip(
+    tabs,
+    sorted(df["RoundNumber"].unique())
+):
 
-df = df[
-    df["RoundNumber"] == ronda
-]
+    with tab:
 
-for _, row in df.iterrows():
+        df_ronda = df[
+            df["RoundNumber"] == numero_ronda
+        ]
+
+for _, row in df_ronda.iterrows():
+
+
 
     st.markdown("###")
 
