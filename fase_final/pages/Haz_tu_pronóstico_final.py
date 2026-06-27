@@ -94,6 +94,8 @@ def to_colombia_time(date_utc):
 
 df = get_knockout_matches()
 
+st.write(df["RoundNumber"].unique())
+st.write(df["RoundNumber"].dtype)
 
 @st.cache_data(ttl=120)
 def load_predicciones(_sheet):
