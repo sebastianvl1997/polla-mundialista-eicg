@@ -94,11 +94,7 @@ def get_champion(sheet, user_id):
 
 
 
-def save_champion(
-    sheet,
-    user_id,
-    campeon
-):
+def save_champion(sheet, user_id, campeon):
 
     now = datetime.now(
         ZoneInfo("America/Bogota")
