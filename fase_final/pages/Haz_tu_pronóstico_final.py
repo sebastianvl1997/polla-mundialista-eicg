@@ -112,6 +112,9 @@ def get_user_predictions(_sheet, user_id):
 
 predicciones_usuario = get_user_predictions(pronosticos_sheet, user_id)
 
+# Mantener únicamente la fase final
+df = df[df["RoundNumber"] >= 4]
+
 rondas = {
     4: "Dieciseisavos de final",
     5: "Octavos de final",
@@ -121,17 +124,13 @@ rondas = {
 }
 
 rondas_disponibles = sorted(
-    df["RoundNumber"].unique()
+    df["RoundNumber"].astype(int).unique()
 )
-
-st.write("RoundNumber únicos:", sorted(df["RoundNumber"].unique()))
-st.write("Rondas disponibles:", rondas_disponibles)
-st.write(type(rondas_disponibles[0]))
 
 ronda = st.selectbox(
     "🏆 Selecciona la fase",
     rondas_disponibles,
-    format_func=lambda x: rondas[x]
+    format_func=lambda x: rondas[int(x)]
 )
 
 df = df[
