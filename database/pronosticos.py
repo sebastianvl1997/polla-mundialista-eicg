@@ -80,16 +80,16 @@ def save_prediction(
 from zoneinfo import ZoneInfo
 
 
-# def get_champion(sheet, user_id):
+def get_champion(sheet, user_id):
 
-#     registros = sheet.get_all_records()
+    registros = sheet.get_all_records()
 
-#     for row in registros:
+    for row in registros:
 
-#         if str(row["user_id"]) == str(user_id):
-#             return row
+        if str(row["user_id"]) == str(user_id):
+            return row
 
-#     return None
+    return None
 
 
 
