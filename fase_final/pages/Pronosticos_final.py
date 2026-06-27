@@ -33,7 +33,7 @@ st.title("🔮 Pronósticos de los participantes")
 
 spreadsheet = connect()
 
-usuarios_sheet = spreadsheet.worksheet("Participantes_Final")
+usuarios_sheet = spreadsheet.worksheet("Usuarios_Final")
 pronosticos_sheet = spreadsheet.worksheet("Pronosticos_Final")
 
 usuarios_df = pd.DataFrame(
