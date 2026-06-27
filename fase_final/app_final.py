@@ -1,7 +1,11 @@
 from pathlib import Path
 import sys
 
-ROOT = Path(__file__).resolve().parent.parent
+ROOT = Path(__file__).resolve().parents[1]
+
+print("ROOT =", ROOT)
+print("Existe services:", (ROOT / "services").exists())
+print(sys.path)
 
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
