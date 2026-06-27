@@ -110,33 +110,22 @@ def get_user_predictions(_sheet, user_id):
 
 predicciones_usuario = get_user_predictions(pronosticos_sheet, user_id)
 
-orden = [
-    "Round of 32",
-    "Round of 16",
-    "Quarter-finals",
-    "Semi-finals",
-    "Third-place play-off",
-    "Final"
-]
-
-nombres = {
-    "Round of 32": "Dieciseisavos de final",
-    "Round of 16": "Octavos de final",
-    "Quarter-finals": "Cuartos de final",
-    "Semi-finals": "Semifinales",
-    "Third-place play-off": "Tercer puesto",
-    "Final": "Final"
+rondas = {
+    4: "Dieciseisavos de final",
+    5: "Octavos de final",
+    6: "Cuartos de final",
+    7: "Semifinales",
+    8: "Final y tercer puesto"
 }
 
-rondas_disponibles = [
-    r for r in orden
-    if r in df["RoundNumber"].unique()
-]
+rondas_disponibles = sorted(
+    df["RoundNumber"].unique()
+)
 
 ronda = st.selectbox(
     "🏆 Selecciona la fase",
     rondas_disponibles,
-    format_func=lambda x: nombres[x]
+    format_func=lambda x: rondas[x]
 )
 
 df = df[
@@ -160,7 +149,9 @@ for _, row in df.iterrows():
             st.write(f"🏟️ {row.get('Location', 'N/A')}")
     
         with col_info[2]:
-            st.write(f"🏆 {nombres.get(row["RoundNumber"], row["RoundNumber"])}")
+            st.write(
+                f"🏆 {rondas[row['RoundNumber']]}"
+            )
     
         st.divider()
     
