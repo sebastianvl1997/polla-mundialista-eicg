@@ -38,7 +38,7 @@ if "user" in st.session_state:
 
     st.session_state["last_activity"] = datetime.now()
 
-st.title("Login")
+st.title("LOGIN (Siempre iniciar sesión con el mismo correo)")
 
 # --------------------
 # CALLBACK OAUTH
