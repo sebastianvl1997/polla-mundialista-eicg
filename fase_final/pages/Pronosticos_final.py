@@ -9,7 +9,10 @@ import streamlit as st
 import pandas as pd
 
 from database.sheets import connect
-from services.fixture_service import get_knockout_matches
+from services.fixture_service import (
+    get_knockout_matches,
+    get_flag_url
+)
 
 st.title("🔮 Pronósticos de los participantes")
 
@@ -32,11 +35,9 @@ if pronosticos_df.empty:
     ])
 
 # --------------------------
-# FIXTURE SOLO FASE FINAL
+# FIXTURE FASE FINAL
 # --------------------------
 df = get_knockout_matches()
-
-# SOLO eliminatorias
 df = df[df["RoundNumber"] >= 4]
 
 rondas = {
@@ -66,26 +67,52 @@ for tab, ronda in zip(tabs, sorted(df["RoundNumber"].unique())):
 
             with st.container(border=True):
 
-                # HEADER partido
-                col_info = st.columns(3)
+                partido_id = partido["MatchNumber"]
+
+                # --------------------------
+                # HEADER PARTIDO
+                # --------------------------
+                col_info = st.columns([1, 2, 1])
 
                 with col_info[0]:
-                    st.write(f"📅 Partido {partido['MatchNumber']}")
+                    st.markdown(f"**⚽ Partido {partido_id}**")
 
                 with col_info[1]:
-                    st.write(f"🏟️ {partido.get('Location', 'N/A')}")
+                    st.markdown(f"**🏆 {rondas[ronda]}**")
 
                 with col_info[2]:
-                    st.write(f"🏆 {rondas.get(ronda, '')}")
+                    st.markdown(f"🏟️ {partido.get('Location', 'N/A')}")
 
                 st.divider()
 
                 # --------------------------
-                # PROGNÓSTICOS DEL PARTIDO
+                # MATCH DISPLAY (FLAGS)
+                # --------------------------
+                col1, col2, col3 = st.columns([3, 1, 3])
+
+                with col1:
+                    c1, c2 = st.columns([1, 4])
+                    with c1:
+                        st.image(get_flag_url(partido["HomeTeam"]), width=45)
+                    with c2:
+                        st.markdown(f"### {partido['HomeTeam']}")
+
+                with col2:
+                    st.markdown("## VS")
+
+                with col3:
+                    c1, c2 = st.columns([1, 4])
+                    with c1:
+                        st.image(get_flag_url(partido["AwayTeam"]), width=45)
+                    with c2:
+                        st.markdown(f"### {partido['AwayTeam']}")
+
+                # --------------------------
+                # PRONÓSTICOS
                 # --------------------------
                 pronosticos_partido = pronosticos_df[
                     pronosticos_df["partido_id"].astype(str)
-                    == str(partido["MatchNumber"])
+                    == str(partido_id)
                 ]
 
                 if pronosticos_partido.empty:
