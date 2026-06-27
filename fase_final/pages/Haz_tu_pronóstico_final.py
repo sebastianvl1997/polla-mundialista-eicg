@@ -124,6 +124,10 @@ rondas_disponibles = sorted(
     df["RoundNumber"].unique()
 )
 
+st.write("RoundNumber únicos:", sorted(df["RoundNumber"].unique()))
+st.write("Rondas disponibles:", rondas_disponibles)
+st.write(type(rondas_disponibles[0]))
+
 ronda = st.selectbox(
     "🏆 Selecciona la fase",
     rondas_disponibles,
