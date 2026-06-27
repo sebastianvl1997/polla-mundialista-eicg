@@ -65,7 +65,7 @@ if "code" in params:
         spreadsheet = connect()
 
         usuarios_sheet = spreadsheet.worksheet(
-            "Participantes_Final"
+            "Usuarios_Final"
         )
 
         email = session.user.email
