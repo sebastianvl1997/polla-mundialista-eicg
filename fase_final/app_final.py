@@ -123,7 +123,7 @@ if st.button("Login con Google"):
         "provider": "google",
         "options": {
             "redirect_to":
-            "https://https://polla-mundialista-eicg-fase-final.streamlit.app"
+            "https://polla-mundialista-eicg-fase-final.streamlit.app"
         }
     })
 
