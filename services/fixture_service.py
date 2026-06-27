@@ -131,25 +131,22 @@ def get_knockout_matches():
 
     df = get_all_matches()
 
-    fases = [
-        "Round of 32",
-        "Round of 16",
-        "Quarter-finals",
-        "Semi-finals",
-        "Third-place play-off",
-        "Final"
-    ]
+    if "RoundNumber" not in df.columns:
+        raise Exception(
+            "El fixture no contiene la columna 'RoundNumber'."
+        )
 
-    if "Group" in df.columns:
+    df["RoundNumber"] = pd.to_numeric(
+        df["RoundNumber"],
+        errors="coerce"
+    )
 
-        df = df[
-            ~df["Group"].astype(str).str.match(r"^[A-Z]$")
-        ]
+    df = df[
+        df["RoundNumber"] >= 4
+    ].copy()
 
-    if "RoundName" in df.columns:
-
-        df = df[
-            df["RoundName"].isin(fases)
-        ]
+    df = df.sort_values(
+        "MatchNumber"
+    )
 
     return df
