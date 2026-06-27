@@ -141,204 +141,204 @@ for tab, numero_ronda in zip(
             df["RoundNumber"] == numero_ronda
         ]
 
-for _, row in df_ronda.iterrows():
-
-
-
-    st.markdown("###")
-
-    # HEADER: hora + estadio + grupo
-    
-    with st.container(border=True):
-    
-        col_info = st.columns(3)
-    
-        with col_info[0]:
-            st.write(f"🕒 {to_colombia_time(row.get('DateUtc'))}")
-    
-        with col_info[1]:
-            st.write(f"🏟️ {row.get('Location', 'N/A')}")
-    
-        with col_info[2]:
-            st.write(
-                f"🏆 {rondas[row['RoundNumber']]}"
-            )
-    
-        st.divider()
-    
-        # PARTIDO
-        col1, col2, col3 = st.columns([3, 1, 3])
-    
-        with col1:
-            c1, c2 = st.columns([1, 4])
-            with c1:
-                st.image(get_flag_url(row["HomeTeam"]), width=50)
-            with c2:
-                st.markdown(
-                    f"### {row['HomeTeam']}"
-                )
-    
-        with col2:
-            st.markdown("## VS")
-    
-            # resultado si existe
-            hg = row.get("HomeGoals", "")
-            ag = row.get("AwayGoals", "")
-            if hg != "" and ag != "":
-                st.caption(f"{hg} - {ag}")
-    
-        with col3:
-            c1, c2 = st.columns([1, 4])
-            with c1:
-                st.image(get_flag_url(row["AwayTeam"]), width=50)
-            with c2:
-                st.markdown(
-                    f"### {row['AwayTeam']}"
-                )
-    
-        partido_id = row["MatchNumber"]
+        for _, row in df_ronda.iterrows():
         
-
         
-
-
-        fecha_partido = pd.to_datetime(
-            row["DateUtc"],
-            utc=True
-        ).tz_convert("America/Bogota")
         
-        hora_cierre = fecha_partido - timedelta(
-            minutes=10
-        )
+            st.markdown("###")
         
-        partido_bloqueado = (
-            datetime.now(fecha_partido.tzinfo)
-            >=
-            hora_cierre
-        )
-        
-        prediction = next(
-            (
-                p for p in predicciones_usuario
-                if str(p["partido_id"]) == str(partido_id)
-            ),
-            None
-        )
+            # HEADER: hora + estadio + grupo
+            
+            with st.container(border=True):
+            
+                col_info = st.columns(3)
+            
+                with col_info[0]:
+                    st.write(f"🕒 {to_colombia_time(row.get('DateUtc'))}")
+            
+                with col_info[1]:
+                    st.write(f"🏟️ {row.get('Location', 'N/A')}")
+            
+                with col_info[2]:
+                    st.write(
+                        f"🏆 {rondas[row['RoundNumber']]}"
+                    )
+            
+                st.divider()
+            
+                # PARTIDO
+                col1, col2, col3 = st.columns([3, 1, 3])
+            
+                with col1:
+                    c1, c2 = st.columns([1, 4])
+                    with c1:
+                        st.image(get_flag_url(row["HomeTeam"]), width=50)
+                    with c2:
+                        st.markdown(
+                            f"### {row['HomeTeam']}"
+                        )
+            
+                with col2:
+                    st.markdown("## VS")
+            
+                    # resultado si existe
+                    hg = row.get("HomeGoals", "")
+                    ag = row.get("AwayGoals", "")
+                    if hg != "" and ag != "":
+                        st.caption(f"{hg} - {ag}")
+            
+                with col3:
+                    c1, c2 = st.columns([1, 4])
+                    with c1:
+                        st.image(get_flag_url(row["AwayTeam"]), width=50)
+                    with c2:
+                        st.markdown(
+                            f"### {row['AwayTeam']}"
+                        )
+            
+                partido_id = row["MatchNumber"]
                 
         
-        if prediction:
-        
-            default_local = int(
-                prediction["goles_local"]
-            )
-        
-            default_visitante = int(
-                prediction["goles_visitante"]
-            )
-            
-            default_goleador = str(
-                prediction.get("goleador", "")
-            )
-        
-        else:
-        
-            default_local = 0
-            default_visitante = 0
-            default_goleador = ""
+                
         
         
-        st.markdown("##### 🎯 Tu pronóstico")
-        
-        col_local, col_vs, col_visitante = st.columns([3, 1, 3])
-        
-        with col_local:
-            st.markdown(f"**{row['HomeTeam']}**")
-            goles_local = st.number_input(
-                label="",
-                min_value=0,
-                max_value=20,
-                value=default_local,
-                key=f"hl_{partido_id}",
-                disabled=partido_bloqueado
-            )
-        
-        with col_vs:
-            st.markdown(
-                "<div style='text-align:center; font-size:22px; font-weight:bold;'>VS</div>",
-                unsafe_allow_html=True
-            )
-        
-        with col_visitante:
-            st.markdown(f"**{row['AwayTeam']}**")
-            goles_visitante = st.number_input(
-                label="",
-                min_value=0,
-                max_value=20,
-                value=default_visitante,
-                key=f"av_{partido_id}",
-                disabled=partido_bloqueado
-            )
-            
-    equipo_local = row["HomeTeam"]
-    equipo_visitante = row["AwayTeam"]
-    
-    jugadores_partido = jugadores_df[
-        jugadores_df["equipo"].isin(
-            [equipo_local, equipo_visitante]
-        )
-    ]
-    
-    opciones_goleador = {
-        f"{r['jugador']} ({r['equipo']} - {r['posicion']})":
-        r["jugador"]
-        for _, r in jugadores_partido.iterrows()
-    }
-    
-    lista_display = [""] + sorted(
-        opciones_goleador.keys()
-    )
-    
-    indice_default = 0
-    
-    for i, texto in enumerate(lista_display):
-        if opciones_goleador.get(texto, "") == default_goleador:
-            indice_default = i
-            break
-    
-    goleador_display = st.selectbox(
-        "🎯 Hace gol en el partido",
-        options=lista_display,
-        index=indice_default,
-        key=f"scorer_{partido_id}",
-        disabled=partido_bloqueado
-    )
-    
-    goleador = opciones_goleador.get(
-        goleador_display,
-        ""
-    )
-
-    if not partido_bloqueado:
-        if st.button(
-            "Guardar pronóstico",
-            key=f"save_{partido_id}",
-            disabled=partido_bloqueado
-        ):
-            with st.spinner("Guardando..."):
-                save_prediction(
-                    pronosticos_sheet,
-                    user_id,
-                    partido_id,
-                    goles_local,
-                    goles_visitante,
-                    goleador
+                fecha_partido = pd.to_datetime(
+                    row["DateUtc"],
+                    utc=True
+                ).tz_convert("America/Bogota")
+                
+                hora_cierre = fecha_partido - timedelta(
+                    minutes=10
                 )
-        
-            st.success("Pronóstico guardado")
+                
+                partido_bloqueado = (
+                    datetime.now(fecha_partido.tzinfo)
+                    >=
+                    hora_cierre
+                )
+                
+                prediction = next(
+                    (
+                        p for p in predicciones_usuario
+                        if str(p["partido_id"]) == str(partido_id)
+                    ),
+                    None
+                )
+                        
+                
+                if prediction:
+                
+                    default_local = int(
+                        prediction["goles_local"]
+                    )
+                
+                    default_visitante = int(
+                        prediction["goles_visitante"]
+                    )
+                    
+                    default_goleador = str(
+                        prediction.get("goleador", "")
+                    )
+                
+                else:
+                
+                    default_local = 0
+                    default_visitante = 0
+                    default_goleador = ""
+                
+                
+                st.markdown("##### 🎯 Tu pronóstico")
+                
+                col_local, col_vs, col_visitante = st.columns([3, 1, 3])
+                
+                with col_local:
+                    st.markdown(f"**{row['HomeTeam']}**")
+                    goles_local = st.number_input(
+                        label="",
+                        min_value=0,
+                        max_value=20,
+                        value=default_local,
+                        key=f"hl_{partido_id}",
+                        disabled=partido_bloqueado
+                    )
+                
+                with col_vs:
+                    st.markdown(
+                        "<div style='text-align:center; font-size:22px; font-weight:bold;'>VS</div>",
+                        unsafe_allow_html=True
+                    )
+                
+                with col_visitante:
+                    st.markdown(f"**{row['AwayTeam']}**")
+                    goles_visitante = st.number_input(
+                        label="",
+                        min_value=0,
+                        max_value=20,
+                        value=default_visitante,
+                        key=f"av_{partido_id}",
+                        disabled=partido_bloqueado
+                    )
+                    
+            equipo_local = row["HomeTeam"]
+            equipo_visitante = row["AwayTeam"]
             
-    
+            jugadores_partido = jugadores_df[
+                jugadores_df["equipo"].isin(
+                    [equipo_local, equipo_visitante]
+                )
+            ]
+            
+            opciones_goleador = {
+                f"{r['jugador']} ({r['equipo']} - {r['posicion']})":
+                r["jugador"]
+                for _, r in jugadores_partido.iterrows()
+            }
+            
+            lista_display = [""] + sorted(
+                opciones_goleador.keys()
+            )
+            
+            indice_default = 0
+            
+            for i, texto in enumerate(lista_display):
+                if opciones_goleador.get(texto, "") == default_goleador:
+                    indice_default = i
+                    break
+            
+            goleador_display = st.selectbox(
+                "🎯 Hace gol en el partido",
+                options=lista_display,
+                index=indice_default,
+                key=f"scorer_{partido_id}",
+                disabled=partido_bloqueado
+            )
+            
+            goleador = opciones_goleador.get(
+                goleador_display,
+                ""
+            )
         
-    else:
-        st.info("🔒 Pronóstico cerrado")
-
-    st.divider()
+            if not partido_bloqueado:
+                if st.button(
+                    "Guardar pronóstico",
+                    key=f"save_{partido_id}",
+                    disabled=partido_bloqueado
+                ):
+                    with st.spinner("Guardando..."):
+                        save_prediction(
+                            pronosticos_sheet,
+                            user_id,
+                            partido_id,
+                            goles_local,
+                            goles_visitante,
+                            goleador
+                        )
+                
+                    st.success("Pronóstico guardado")
+                    
+            
+                
+            else:
+                st.info("🔒 Pronóstico cerrado")
+        
+            st.divider()
