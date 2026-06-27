@@ -131,22 +131,8 @@ def get_knockout_matches():
 
     df = get_all_matches()
 
-    if "RoundNumber" not in df.columns:
-        raise Exception(
-            "El fixture no contiene la columna 'RoundNumber'."
-        )
-
-    df["RoundNumber"] = pd.to_numeric(
-        df["RoundNumber"],
-        errors="coerce"
-    )
-
     df = df[
         df["RoundNumber"] >= 4
     ].copy()
-
-    df = df.sort_values(
-        "MatchNumber"
-    )
 
     return df
