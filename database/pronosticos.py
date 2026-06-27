@@ -73,3 +73,59 @@ def save_prediction(
         goleador,
         now
     ])
+    
+    
+
+
+from zoneinfo import ZoneInfo
+
+
+# def get_champion(sheet, user_id):
+
+#     registros = sheet.get_all_records()
+
+#     for row in registros:
+
+#         if str(row["user_id"]) == str(user_id):
+#             return row
+
+#     return None
+
+
+
+
+def save_champion(
+    sheet,
+    user_id,
+    campeon
+):
+
+    now = datetime.now(
+        ZoneInfo("America/Bogota")
+    ).strftime("%Y-%m-%d %H:%M:%S")
+
+    registros = sheet.get_all_records()
+
+    for idx, row in enumerate(
+        registros,
+        start=2
+    ):
+
+        if str(row["user_id"]) == str(user_id):
+
+            sheet.update(
+                f"A{idx}:C{idx}",
+                [[
+                    user_id,
+                    campeon,
+                    now
+                ]]
+            )
+
+            return
+
+    sheet.append_row([
+        user_id,
+        campeon,
+        now
+    ])

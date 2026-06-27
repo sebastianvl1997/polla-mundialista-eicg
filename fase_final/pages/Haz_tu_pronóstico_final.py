@@ -12,7 +12,9 @@ from database.sheets import connect
 from datetime import datetime, timedelta
 from database.pronosticos import (
     save_prediction,
-    get_prediction
+    get_prediction,
+    save_champion,
+    get_champion
 )
 
 from database.users import get_user_by_email
@@ -56,6 +58,11 @@ def get_sheets(_spreadsheet):
     )
 
 usuarios_sheet, pronosticos_sheet, jugadores_sheet = get_sheets(spreadsheet)
+
+campeon_sheet = spreadsheet.worksheet(
+    "Campeon_Final"
+)
+
 
 @st.cache_data(ttl=300)
 def load_jugadores(_sheet):
@@ -122,6 +129,72 @@ rondas = {
     7: "Semifinales",
     8: "Final y 3.er puesto"
 }
+
+
+equipos = sorted(
+    set(df["HomeTeam"]).union(df["AwayTeam"])
+)
+
+registros_campeon = campeon_sheet.get_all_records()
+
+campeon_actual = ""
+
+for r in registros_campeon:
+
+    if str(r["user_id"]) == str(user_id):
+
+        campeon_actual = r["campeon"]
+        break
+    
+partido73 = df[df["MatchNumber"] == 73].iloc[0]
+
+fecha73 = (
+    pd.to_datetime(partido73["DateUtc"], utc=True)
+      .tz_convert("America/Bogota")
+)
+
+bloqueado_campeon = (
+    datetime.now(fecha73.tzinfo)
+    >=
+    fecha73 - timedelta(minutes=1)
+)
+
+
+
+campeon_sheet = spreadsheet.worksheet("Campeon_Final")
+
+st.subheader("🏆 Campeón del Mundial")
+
+campeon = st.selectbox(
+    "Selecciona el campeón",
+    equipos,
+    index=equipos.index(campeon_actual)
+    if campeon_actual in equipos else 0,
+    disabled=bloqueado_campeon
+)
+
+if not bloqueado_campeon:
+
+    if st.button("Guardar campeón"):
+
+        save_champion(
+            campeon_sheet,
+            user_id,
+            campeon
+        )
+
+        st.cache_data.clear()
+
+        st.success("🏆 Campeón guardado.")
+        st.rerun()
+
+else:
+
+    st.info("🔒 El campeón ya no puede modificarse.")
+    
+    
+    
+
 
 tabs = st.tabs(
     [
