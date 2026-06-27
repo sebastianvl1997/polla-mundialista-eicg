@@ -11,17 +11,13 @@ ROOT = Path(__file__).resolve().parents[2]
 
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
-    
+
 import streamlit as st
 import pandas as pd
 
 from database.sheets import connect
 from services.fixture_service import get_all_matches
 from services.scoring import evaluar_pronostico
-
-
-
-
 
 st.title("📋 Pronósticos de los participantes (FASE FINAL)")
 
@@ -37,23 +33,16 @@ resultados = resultados_sheet.get_all_records()
 
 participantes = sorted([u["nombre"] for u in usuarios])
 
-participante = st.selectbox(
-    "Participante",
-    participantes
-)
+participante = st.selectbox("Participante", participantes)
 
 usuario = next(
-    (
-        u for u in usuarios
-        if u["nombre"] == participante
-    ),
+    (u for u in usuarios if u["nombre"] == participante),
     None
 )
 
 if usuario is None:
     st.error(f"No se encontró el participante: {participante}")
     st.stop()
-
 
 user_id = str(usuario["user_id"])
 
@@ -67,7 +56,13 @@ resultados_map = {
     for r in resultados
 }
 
+# --------------------------
+# FIXTURE FASE FINAL
+# --------------------------
 fixture = get_all_matches()
+
+# 🔥 SOLO FASE FINAL
+fixture = fixture[fixture["RoundNumber"] >= 4]
 
 filas = []
 
@@ -81,10 +76,7 @@ for _, match in fixture.iterrows():
     partido_id = str(match["MatchNumber"])
 
     pron = next(
-        (
-            p for p in pronosticos_usuario
-            if str(p["partido_id"]) == partido_id
-        ),
+        (p for p in pronosticos_usuario if str(p["partido_id"]) == partido_id),
         None
     )
 
@@ -97,10 +89,7 @@ for _, match in fixture.iterrows():
 
     if pron and resultado:
 
-        evaluacion = evaluar_pronostico(
-            pron,
-            resultado
-        )
+        evaluacion = evaluar_pronostico(pron, resultado)
 
         puntos = evaluacion["puntos"]
         exacto = "✓" if evaluacion["exacto"] else ""
@@ -113,46 +102,29 @@ for _, match in fixture.iterrows():
         total_goleadores += int(evaluacion["goleador"])
 
     filas.append({
-        "Partido":
-            f"{match['HomeTeam']} vs {match['AwayTeam']}",
+        "Partido": f"{match['HomeTeam']} vs {match['AwayTeam']}",
 
         "Pronóstico":
-            ""
-            if not pron
-            else
-            f"{pron['goles_local']}-{pron['goles_visitante']}",
+            "" if not pron else f"{pron['goles_local']}-{pron['goles_visitante']}",
 
         "Goleador pronóstico":
-            ""
-            if not pron
-            else
-            pron["goleador"],
+            "" if not pron else pron["goleador"],
 
         "Resultado real":
-            ""
-            if not resultado
-            else
-            f"{resultado['goles_local']}-{resultado['goles_visitante']}",
+            "" if not resultado else f"{resultado['goles_local']}-{resultado['goles_visitante']}",
 
         "Goleadores reales":
-            ""
-            if not resultado
-            else
-            resultado["goleador_final"],
+            "" if not resultado else resultado["goleador_final"],
 
-        "Pts":
-            puntos,
-
-        "Exacto":
-            exacto,
-
-        "Resultado":
-            resultado_ok,
-
-        "Goleador":
-            goleador_ok
+        "Pts": puntos,
+        "Exacto": exacto,
+        "Resultado": resultado_ok,
+        "Goleador": goleador_ok
     })
 
+# --------------------------
+# TOTAL
+# --------------------------
 filas.append({
     "Partido": "TOTAL",
     "Pronóstico": "",
