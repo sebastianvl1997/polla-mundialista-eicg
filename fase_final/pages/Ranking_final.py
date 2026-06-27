@@ -14,22 +14,22 @@ from services.sync_results_service import (
 
 from database.sheets import connect
 
-from services.permissions_service import (
-    puede_jugar_final
-)
+# from services.permissions_service import (
+#     puede_jugar_final
+# )
 
-user = st.session_state.get("user")
+# user = st.session_state.get("user")
 
-if not user:
-    st.stop()
+# if not user:
+#     st.stop()
 
-if not puede_jugar_final(user.email):
+# if not puede_jugar_final(user.email):
 
-    st.error(
-        "No estás inscrito para participar en la fase final, comunícate con el Administrador al 3053435734."
-    )
+#     st.error(
+#         "No estás inscrito para participar en la fase final, comunícate con el Administrador al 3053435734."
+#     )
 
-    st.stop()
+#     st.stop()
 
 st.title("🏆 Ranking General")
 
