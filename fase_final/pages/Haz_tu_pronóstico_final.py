@@ -130,7 +130,7 @@ nombres = {
 
 rondas_disponibles = [
     r for r in orden
-    if r in df["RoundName"].unique()
+    if r in df["RoundNumber"].unique()
 ]
 
 ronda = st.selectbox(
@@ -140,7 +140,7 @@ ronda = st.selectbox(
 )
 
 df = df[
-    df["RoundName"] == ronda
+    df["RoundNumber"] == ronda
 ]
 
 for _, row in df.iterrows():
@@ -160,7 +160,7 @@ for _, row in df.iterrows():
             st.write(f"🏟️ {row.get('Location', 'N/A')}")
     
         with col_info[2]:
-            st.write(f"🏆 {nombres.get(row["RoundName"], row["RoundName"])}")
+            st.write(f"🏆 {nombres.get(row["RoundNumber"], row["RoundNumber"])}")
     
         st.divider()
     
