@@ -2,6 +2,7 @@ import streamlit as st
 from auth_utils import is_admin, get_user
 from services.sync_results_service import sincronizar_resultados
 
+
 user = get_user()
 
 if not user:
@@ -25,6 +26,10 @@ from database.sheets import connect
 
 from services.results_service import (
     actualizar_resultado
+)
+
+from services.fase_final_service import (
+    cerrar_fase_grupos
 )
 
 spreadsheet = connect()
@@ -91,3 +96,23 @@ if st.button(
 
 if st.button("Sincronizar resultados"):
     sincronizar_resultados()
+    
+    
+confirmar = st.checkbox(
+    "Confirmo que la fase de grupos ha terminado"
+)
+
+if (
+    confirmar
+    and
+    st.button(
+        "🏁 Cerrar Fase de Grupos"
+    )
+):
+
+    cerrar_fase_grupos()
+
+    st.success(
+        "Fase de grupos cerrada correctamente"
+
+    )

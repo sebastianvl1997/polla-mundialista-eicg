@@ -44,6 +44,18 @@ pronosticos_df = pd.DataFrame(
     pronosticos_sheet.get_all_records()
 )
 
+if pronosticos_df.empty:
+    pronosticos_df = pd.DataFrame(
+        columns=[
+            "user_id",
+            "partido_id",
+            "goles_local",
+            "goles_visitante",
+            "goleador",
+            "ultima_modificacion"
+        ]
+    )
+
 fixture_df = get_group_stage_matches()
 
 # --------------------------

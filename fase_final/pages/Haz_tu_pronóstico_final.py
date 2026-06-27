@@ -74,7 +74,7 @@ user_id = usuario["user_id"]
 
 
 
-from services.fixture_service import get_flag_url
+# from services.fixture_service import get_flag_url
 from services.fixture_service import (
     get_knockout_matches,
     get_flag_url
