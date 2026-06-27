@@ -43,9 +43,17 @@ participante = st.selectbox(
 )
 
 usuario = next(
-    u for u in usuarios
-    if u["nombre"] == participante
+    (
+        u for u in usuarios
+        if u["nombre"] == participante
+    ),
+    None
 )
+
+if usuario is None:
+    st.error(f"No se encontró el participante: {participante}")
+    st.stop()
+
 
 user_id = str(usuario["user_id"])
 
