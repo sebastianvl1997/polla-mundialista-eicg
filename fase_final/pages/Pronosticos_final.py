@@ -2,32 +2,14 @@ from pathlib import Path
 import sys
 
 ROOT = Path(__file__).resolve().parents[2]
-
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
-    
+
 import streamlit as st
 import pandas as pd
 
 from database.sheets import connect
-from services.fixture_service import get_group_stage_matches
-
-# from services.permissions_service import (
-#     puede_jugar_final
-# )
-
-# user = st.session_state.get("user")
-
-# if not user:
-#     st.stop()
-
-# if not puede_jugar_final(user.email):
-
-#     st.error(
-#         "No estás inscrito para participar en la fase final, comunícate con el Administrador al 3053435734."
-#     )
-
-#     st.stop()
+from services.fixture_service import get_knockout_matches
 
 st.title("🔮 Pronósticos de los participantes")
 
@@ -36,111 +18,104 @@ spreadsheet = connect()
 usuarios_sheet = spreadsheet.worksheet("Usuarios_Final")
 pronosticos_sheet = spreadsheet.worksheet("Pronosticos_Final")
 
-usuarios_df = pd.DataFrame(
-    usuarios_sheet.get_all_records()
-)
-
-pronosticos_df = pd.DataFrame(
-    pronosticos_sheet.get_all_records()
-)
+usuarios_df = pd.DataFrame(usuarios_sheet.get_all_records())
+pronosticos_df = pd.DataFrame(pronosticos_sheet.get_all_records())
 
 if pronosticos_df.empty:
-    pronosticos_df = pd.DataFrame(
-        columns=[
-            "user_id",
-            "partido_id",
-            "goles_local",
-            "goles_visitante",
-            "goleador",
-            "ultima_modificacion"
-        ]
-    )
-
-fixture_df = get_group_stage_matches()
+    pronosticos_df = pd.DataFrame(columns=[
+        "user_id",
+        "partido_id",
+        "goles_local",
+        "goles_visitante",
+        "goleador",
+        "ultima_modificacion"
+    ])
 
 # --------------------------
-# Selector de partido
+# FIXTURE SOLO FASE FINAL
 # --------------------------
+df = get_knockout_matches()
 
-partidos = {
-    row["MatchNumber"]:
-    f"{row['HomeTeam']} vs {row['AwayTeam']}"
-    for _, row in fixture_df.iterrows()
+# SOLO eliminatorias
+df = df[df["RoundNumber"] >= 4]
+
+rondas = {
+    4: "Dieciseisavos",
+    5: "Octavos",
+    6: "Cuartos",
+    7: "Semifinales",
+    8: "Final y 3.er puesto"
 }
 
-partido_id = st.selectbox(
-    "⚽ Selecciona un partido",
-    options=list(partidos.keys()),
-    format_func=lambda x: partidos[x]
+# --------------------------
+# TABS POR RONDA
+# --------------------------
+tabs = st.tabs(
+    [rondas[r] for r in sorted(df["RoundNumber"].unique())]
 )
 
-# --------------------------
-# Información del partido
-# --------------------------
+for tab, ronda in zip(tabs, sorted(df["RoundNumber"].unique())):
 
-partido = fixture_df[
-    fixture_df["MatchNumber"] == partido_id
-].iloc[0]
+    with tab:
 
-st.subheader(
-    f"{partido['HomeTeam']} vs {partido['AwayTeam']}"
-)
+        df_ronda = df[df["RoundNumber"] == ronda]
 
-# --------------------------
-# Pronósticos del partido
-# --------------------------
+        for _, partido in df_ronda.iterrows():
 
-pronosticos_partido = pronosticos_df[
-    pronosticos_df["partido_id"].astype(str)
-    ==
-    str(partido_id)
-]
+            st.markdown("###")
 
-if pronosticos_partido.empty:
+            with st.container(border=True):
 
-    st.info(
-        "Todavía no hay pronósticos para este partido."
-    )
+                # HEADER partido
+                col_info = st.columns(3)
 
-else:
+                with col_info[0]:
+                    st.write(f"📅 Partido {partido['MatchNumber']}")
 
-    # unir con usuarios
-    tabla = pronosticos_partido.merge(
-        usuarios_df[
-            ["user_id", "nombre"]
-        ],
-        on="user_id",
-        how="left"
-    )
+                with col_info[1]:
+                    st.write(f"🏟️ {partido.get('Location', 'N/A')}")
 
-    tabla["Pronóstico"] = (
-        tabla["goles_local"].astype(str)
-        + " - "
-        + tabla["goles_visitante"].astype(str)
-    )
+                with col_info[2]:
+                    st.write(f"🏆 {rondas.get(ronda, '')}")
 
-    tabla["Goleador"] = tabla["goleador"].fillna("")
+                st.divider()
 
-    tabla = tabla[
-        [
-            "nombre",
-            "Pronóstico",
-            "Goleador"
-        ]
-    ]
+                # --------------------------
+                # PROGNÓSTICOS DEL PARTIDO
+                # --------------------------
+                pronosticos_partido = pronosticos_df[
+                    pronosticos_df["partido_id"].astype(str)
+                    == str(partido["MatchNumber"])
+                ]
 
-    tabla.columns = [
-        "Participante",
-        "Pronóstico",
-        "Goleador"
-    ]
+                if pronosticos_partido.empty:
+                    st.info("Todavía no hay pronósticos para este partido.")
+                    continue
 
-    tabla = tabla.sort_values(
-        by="Participante"
-    )
+                tabla = pronosticos_partido.merge(
+                    usuarios_df[["user_id", "nombre"]],
+                    on="user_id",
+                    how="left"
+                )
 
-    st.dataframe(
-        tabla,
-        use_container_width=True,
-        hide_index=True
-    )
+                tabla["Pronóstico"] = (
+                    tabla["goles_local"].astype(str)
+                    + " - "
+                    + tabla["goles_visitante"].astype(str)
+                )
+
+                tabla["Goleador"] = tabla["goleador"].fillna("")
+
+                tabla = tabla[[
+                    "nombre",
+                    "Pronóstico",
+                    "Goleador"
+                ]].rename(columns={
+                    "nombre": "Participante"
+                }).sort_values("Participante")
+
+                st.dataframe(
+                    tabla,
+                    use_container_width=True,
+                    hide_index=True
+                )
