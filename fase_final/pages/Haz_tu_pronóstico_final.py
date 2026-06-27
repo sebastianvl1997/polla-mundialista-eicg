@@ -50,7 +50,7 @@ spreadsheet = get_spreadsheet()
 @st.cache_resource
 def get_sheets(_spreadsheet):
     return (
-        _spreadsheet.worksheet("Participantes_Final"),
+        _spreadsheet.worksheet("Usuarios_Final"),
         _spreadsheet.worksheet("Pronosticos_Final"),
         _spreadsheet.worksheet("Jugadores"),
     )
