@@ -24,6 +24,21 @@ if "user" in st.session_state:
 
     st.session_state["last_activity"] = datetime.now()
 
+
+st.title("Fase de grupos finalizada")
+
+st.success(
+    "La fase de grupos ha terminado. "
+    "Continúa con la fase final."
+)
+
+st.link_button(
+    "Ir a la fase final",
+    "https://polla-mundialista-eicg-fase-final.streamlit.app"
+)
+
+st.stop()
+
 st.title("Login")
 
 # --------------------
