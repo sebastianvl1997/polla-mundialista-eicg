@@ -19,9 +19,9 @@ from database.pronosticos import (
 
 from database.users import get_user_by_email
 
-from services.permissions_service import (
-    puede_jugar_final
-)
+# from services.permissions_service import (
+#     puede_jugar_final
+# )
 
 
 
@@ -35,13 +35,13 @@ if not user:
     st.warning("Debes iniciar sesión")
     st.stop()
     
-if not puede_jugar_final(user.email):
+# if not puede_jugar_final(user.email):
 
-    st.error(
-        "No estás inscrito para participar en la fase final, comunícate con el Administrador al 3053435734."
-    )
+#     st.error(
+#         "No estás inscrito para participar en la fase final, comunícate con el Administrador al 3053435734."
+#     )
 
-    st.stop()
+#     st.stop()
 
 @st.cache_resource
 def get_spreadsheet():
