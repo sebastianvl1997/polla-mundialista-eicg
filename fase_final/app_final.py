@@ -250,6 +250,12 @@ Los puntos obtenidos en todos los partidos se acumularán para conformar el rank
 
 ---
 
+## 🏆 CRITERIO DE DESEMPATE
+
+En caso de existir empate entre la puntuación de dos o más jugadores, ganará quien tenga más cantidad de Exactos acertados, luego más Resultados acertados, y finalmente más goleadores acertados.
+
+---
+
 ## 🔮 Transparencia
 
 Todos los participantes podrán consultar los pronósticos realizados por los demás usuarios mediante la pestaña **Pronósticos**, garantizando la transparencia y el juego limpio.
