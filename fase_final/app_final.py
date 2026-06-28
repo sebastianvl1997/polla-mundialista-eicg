@@ -177,7 +177,7 @@ Puntaje: **5 puntos**
 
 ---
 
-### ✅ Equipo Clasificado
+### ✅ Resultado: Ganador o empate
 
 Si no se acierta el marcador exacto, pero sí el equipo ganador, se obtendrán:
 
