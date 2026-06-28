@@ -20,9 +20,11 @@ spreadsheet = connect()
 
 usuarios_sheet = spreadsheet.worksheet("Usuarios_Final")
 pronosticos_sheet = spreadsheet.worksheet("Pronosticos_Final")
+campeon_sheet = spreadsheet.worksheet("Campeon_Final")
 
 usuarios_df = pd.DataFrame(usuarios_sheet.get_all_records())
 pronosticos_df = pd.DataFrame(pronosticos_sheet.get_all_records())
+campeon_df = pd.DataFrame(campeon_sheet.get_all_records())
 
 if pronosticos_df.empty:
     pronosticos_df = pd.DataFrame(columns=[
@@ -51,11 +53,14 @@ rondas = {
 # --------------------------
 # TABS POR RONDA
 # --------------------------
+rondas_existentes = sorted(df["RoundNumber"].unique())
+
 tabs = st.tabs(
-    [rondas[r] for r in sorted(df["RoundNumber"].unique())]
+    [rondas[r] for r in rondas_existentes] +
+    ["🏆 Campeón"]
 )
 
-for tab, ronda in zip(tabs, sorted(df["RoundNumber"].unique())):
+for tab, ronda in zip(tabs[:-1], rondas_existentes):
 
     with tab:
 
@@ -146,3 +151,35 @@ for tab, ronda in zip(tabs, sorted(df["RoundNumber"].unique())):
                     use_container_width=True,
                     hide_index=True
                 )
+                
+with tabs[-1]:
+
+    st.subheader("🏆 Pronóstico de campeón")
+
+    if campeon_df.empty:
+
+        st.info("Nadie ha seleccionado un campeón todavía.")
+
+    else:
+
+        tabla = campeon_df.merge(
+            usuarios_df[["user_id", "nombre"]],
+            on="user_id",
+            how="left"
+        )
+
+        tabla = tabla.rename(columns={
+            "nombre": "Participante",
+            "campeon": "Campeón"
+        })
+
+        tabla = tabla[[
+            "Participante",
+            "Campeón"
+        ]].sort_values("Participante")
+
+        st.dataframe(
+            tabla,
+            hide_index=True,
+            use_container_width=True
+        )
