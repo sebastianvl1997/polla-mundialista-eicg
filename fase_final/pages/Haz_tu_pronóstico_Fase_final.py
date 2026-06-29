@@ -146,17 +146,17 @@ for r in registros_campeon:
         campeon_actual = r["campeon"]
         break
     
-partido74 = df[df["MatchNumber"] == 74].iloc[0]
+partido76 = df[df["MatchNumber"] == 76].iloc[0]
 
-fecha74 = (
-    pd.to_datetime(partido74["DateUtc"], utc=True)
+fecha76 = (
+    pd.to_datetime(partido76["DateUtc"], utc=True)
       .tz_convert("America/Bogota")
 )
 
 bloqueado_campeon = (
-    datetime.now(fecha74.tzinfo)
+    datetime.now(fecha76.tzinfo)
     >=
-    fecha74 - timedelta(minutes=1)
+    fecha76 - timedelta(minutes=1)
 )
 
 
