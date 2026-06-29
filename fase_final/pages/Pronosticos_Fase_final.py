@@ -14,6 +14,17 @@ from services.fixture_service import (
     get_flag_url
 )
 
+def to_colombia_time(date_utc):
+
+    if not date_utc or date_utc == "N/A":
+        return "N/A"
+
+    return (
+        pd.to_datetime(date_utc, utc=True)
+        .tz_convert("America/Bogota")
+        .strftime("%Y-%m-%d %H:%M")
+    )
+
 st.title("🔮 Pronósticos de los participantes")
 
 spreadsheet = connect()
@@ -77,16 +88,23 @@ for tab, ronda in zip(tabs[:-1], rondas_existentes):
                 # --------------------------
                 # HEADER PARTIDO
                 # --------------------------
-                col_info = st.columns([1, 2, 1])
+                col_info = st.columns([1, 2, 2, 2])
 
                 with col_info[0]:
                     st.markdown(f"**⚽ Partido {partido_id}**")
-
+                
                 with col_info[1]:
                     st.markdown(f"**🏆 {rondas[ronda]}**")
-
+                
                 with col_info[2]:
-                    st.markdown(f"🏟️ {partido.get('Location', 'N/A')}")
+                    st.markdown(
+                        f"🕒 {to_colombia_time(partido.get('DateUtc'))}"
+                    )
+                
+                with col_info[3]:
+                    st.markdown(
+                        f"🏟️ {partido.get('Location', 'N/A')}"
+                    )
 
                 st.divider()
 
